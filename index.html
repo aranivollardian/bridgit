@@ -1,0 +1,303 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Bridgit Segmentation Dashboard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --page:#f5f8fa; --card:#ffffff; --border:#cbd6e2; --row:#dfe3eb; --hairline:#eaf0f6;
+  --ink:#33475b; --ink2:#516f90; --ink3:#7c98b6; --link:#0091ae; --title:#1d5a63;
+  --pill:#eaf0f6; --banner:#3d7a2a;
+  --bar1:#00bda5; --bar2:#6a78d1;
+  --g1:#6cc79a; --g2:#bfe6cf; --g3:#f5c95f; --g4:#f5b5cc;
+  --heat-hi:#f5a3a3; --heat-mid:#f6cfa3; --heat-lo:#efe4c1;
+  --focus:#0091ae;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"Lexend Deca",Avenir,"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.4;padding-inline:16px;padding-block:0 32px}
+a{color:var(--link);text-decoration:none;font-weight:600}
+a:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1380px;margin:0 auto}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:18px 0 14px;border-bottom:1px solid var(--row)}
+.topbar h1{margin:0;font-size:22px;font-weight:600;display:flex;align-items:center;gap:8px}
+.topbar h1 .star{color:#c9a227;font-size:18px}
+.topbar h1 .caret{font-size:12px;color:var(--ink2)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1px solid var(--border);background:#fff;border-radius:3px;padding:7px 14px;font:inherit;font-size:13px;font-weight:500;color:var(--ink);cursor:default}
+.btn.primary{color:var(--link);border-color:var(--link)}
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:22px;padding:14px 4px;font-size:13px;font-weight:600}
+.filters .chip{border:1px solid var(--border);border-radius:3px;padding:5px 10px;background:#fff;font-weight:500}
+.filters .muted{color:var(--ink2);font-weight:500}
+.note{font-size:12px;color:var(--ink3);font-weight:400;margin-left:auto}
+.banner{background:#fff;border:1px solid var(--border);border-radius:4px;padding:38px 20px;text-align:center;margin:8px 0 12px}
+.banner h2{margin:0;color:var(--banner);font-size:34px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-bottom:12px}
+.card{grid-column:span 6;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:14px 16px 16px;min-width:0}
+.card.w4{grid-column:span 4}.card.w8{grid-column:span 8}.card.w12{grid-column:span 12}
+.card-h{display:flex;align-items:flex-start;gap:8px}
+.card-h .grip{color:var(--ink3);font-size:14px;letter-spacing:-2px;margin-top:2px}
+.card-h h3{margin:0;flex:1;font-size:16px;font-weight:600;color:var(--title);text-wrap:balance}
+.card-h h3 .info{display:inline-block;width:14px;height:14px;border:1.5px solid var(--ink3);border-radius:50%;font-size:9px;line-height:11px;text-align:center;color:var(--ink3);margin-left:6px;vertical-align:2px;font-weight:600}
+.card-h .icons{color:var(--ink2);font-size:14px;letter-spacing:6px;white-space:nowrap}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px 18px}
+.pill{background:var(--pill);border-radius:3px;padding:3px 9px;font-size:11px;font-weight:600;color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:var(--ink);margin:0 0 10px 18px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.single{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 0 18px}
+.single .big{font-size:64px;font-weight:600;line-height:1;color:var(--ink)}
+.single .lbl{font-size:15px;font-weight:600;margin-top:12px}
+.single .sub{font-size:12px;color:var(--ink2);margin-top:6px}
+.chart{width:100%;height:auto;display:block}
+.chart text{font-family:inherit;fill:var(--ink2);font-size:11px}
+.chart .val{fill:var(--ink);font-weight:600;font-size:11px}
+.chart .grid{stroke:var(--hairline);stroke-width:1}
+.chart .axis{stroke:var(--row)}
+.chart rect.bar{cursor:default}
+.chart rect.bar:hover{opacity:.85}
+.tbl-wrap{overflow-x:auto;margin-left:2px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+th{font-weight:400;color:var(--ink2);text-align:left;padding:12px 10px;border-bottom:2px solid var(--ink2);white-space:nowrap}
+th .sort{color:var(--ink3);margin-left:6px;font-size:11px}
+td{padding:14px 10px;border-bottom:1px solid var(--row);vertical-align:middle;white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td.link{font-weight:600;color:var(--link)}
+td.link::after{content:"\2197";font-size:10px;margin-left:5px;color:var(--ink3)}
+tr.total td{border-bottom:none;font-weight:600;color:var(--ink);border-top:1px solid var(--ink2)}
+td.heat{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+td.heat.hi{background:var(--heat-hi)}td.heat.mid{background:var(--heat-mid)}td.heat.lo{background:var(--heat-lo)}
+.seg{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600;background:var(--pill)}
+.seg.hot{background:#fde8ee;color:#b0245a}.seg.warm{background:#fff3d6;color:#8a5a00}
+.dial{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start}
+.dial .gauge{text-align:center}
+.dial .gauge .big{font-size:44px;font-weight:600;line-height:1;margin-top:-58px}
+.dial .gauge .lbl{font-size:14px;font-weight:600;margin-top:8px}
+.dial .gauge svg{width:100%;height:auto;display:block}
+.dial .gauge svg text{font-family:inherit;font-size:11px;fill:var(--ink2)}
+.foot{font-size:11px;color:var(--ink3);margin-top:10px;margin-left:18px}
+.tt{position:fixed;pointer-events:none;background:#33475b;color:#fff;font-size:12px;padding:6px 9px;border-radius:3px;opacity:0;transition:opacity .1s;z-index:9;white-space:nowrap}
+@media (max-width:1000px){.card,.card.w4,.card.w8{grid-column:span 12}.dial{grid-template-columns:1fr}.dial .gauge{max-width:280px;margin:0 auto}}
+@media (prefers-reduced-motion:reduce){.tt{transition:none}}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <h1><span class="star">&#9733;</span>State Manager Dashboard <span class="caret">&#9660;</span></h1>
+    <div class="btns"><span class="btn" style="border:none;font-weight:600">Manage dashboards</span><span class="btn">Create dashboard</span><span class="btn">Actions &#9662;</span><span class="btn">Share &#9662;</span><span class="btn primary">Add content</span></div>
+  </div>
+  <div class="filters">
+    <span>&#9998; Quick filters</span><span>Team <span class="chip">State Team &#9662;</span> &#10005;</span><span>&#9776; Advanced filters (4)</span><span>Clear all</span>
+    <span class="note">Mock-up. Illustrative figures. 28 Sep 2026</span>
+  </div>
+
+  <div class="banner"><h2>Activation</h2></div>
+
+  <div class="grid">
+    <div class="card w4">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - % Active Brokers - State<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (3)</span></div>
+      <div class="single"><div class="big">33.5%</div><div class="lbl">Active brokers</div><div class="sub">335 of 1,000 accredited brokers (Hot, Warm and Cool)</div></div>
+    </div>
+    <div class="card w8">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - % Active Brokers by BDM<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (3)</span></div>
+      <div class="legend"><span><i style="background:var(--bar1)"></i>% Active brokers</span></div>
+      <div id="c-activepct"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Inactives Moved to Active - This Week by BDM<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="legend"><span><i style="background:var(--bar1)"></i>(Count) brokers</span></div>
+      <div id="c-week"></div>
+      <div class="foot">Broker was Inactive at start of week and is Active now. Week of 21 to 27 Sep.</div>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Inactives Moved to Active - This Month vs Last Month by BDM<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="legend"><span><i style="background:var(--bar1)"></i>This month (Sep)</span><span><i style="background:var(--bar2)"></i>Last month (Aug)</span></div>
+      <div id="c-month"></div>
+    </div>
+
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Active Opportunity Pool by BDM (Hot &amp; Warm)<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (3)</span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>BDM<span class="sort">&#8645;</span></th><th class="num">No. of Actives (Hot &amp; Warm)<span class="sort">&#8645;</span></th><th class="num">Avg loan value<span class="sort">&#8645;</span></th><th class="num">Opportunity pool<span class="sort">&#8595;</span></th></tr></thead>
+        <tbody id="t-pool"></tbody>
+      </table></div>
+      <div class="foot">Opportunity pool = No. of Actives x Avg loan value.</div>
+    </div>
+
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Inactive Hot &amp; Warm - No Meeting in Last 90 Days<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="dial">
+        <div class="gauge" id="g-nomeet"></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Broker<span class="sort">&#8645;</span></th><th>BDM<span class="sort">&#8645;</span></th><th>Segment<span class="sort">&#8645;</span></th><th>Aggregator<span class="sort">&#8645;</span></th><th class="num">Days since last meeting<span class="sort">&#8595;</span></th></tr></thead>
+          <tbody id="t-nomeet"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Inactive Hot &amp; Warm - Meeting Booked This Month<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="dial">
+        <div class="gauge" id="g-booked"></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Broker<span class="sort">&#8645;</span></th><th>BDM<span class="sort">&#8645;</span></th><th>Segment<span class="sort">&#8645;</span></th><th>Aggregator<span class="sort">&#8645;</span></th><th>Meeting date<span class="sort">&#8593;</span></th></tr></thead>
+          <tbody id="t-booked"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="banner"><h2>Actives</h2></div>
+
+  <div class="grid">
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Actives Hot &amp; Warm - No Application Submitted in Last 90 Days<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="dial">
+        <div class="gauge" id="g-noapp"></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Broker<span class="sort">&#8645;</span></th><th>BDM<span class="sort">&#8645;</span></th><th>Segment<span class="sort">&#8645;</span></th><th class="num">Apps last 12 mths<span class="sort">&#8645;</span></th><th class="num">Days since last application<span class="sort">&#8595;</span></th></tr></thead>
+          <tbody id="t-noapp"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Actives Hot &amp; Warm - No Scenario Sent in Last 90 Days<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="dial">
+        <div class="gauge" id="g-noscen"></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Broker<span class="sort">&#8645;</span></th><th>BDM<span class="sort">&#8645;</span></th><th>Segment<span class="sort">&#8645;</span></th><th class="num">Scenarios last 12 mths<span class="sort">&#8645;</span></th><th class="num">Days since last scenario<span class="sort">&#8595;</span></th></tr></thead>
+          <tbody id="t-noscen"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Actives Hot &amp; Warm - No Completed Meeting in Last 90 Days<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="dial">
+        <div class="gauge" id="g-nomeet-act"></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Broker<span class="sort">&#8645;</span></th><th>BDM<span class="sort">&#8645;</span></th><th>Segment<span class="sort">&#8645;</span></th><th>Last meeting type<span class="sort">&#8645;</span></th><th class="num">Days since last meeting<span class="sort">&#8595;</span></th></tr></thead>
+          <tbody id="t-nomeet-act"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tt" id="tt"></div>
+
+<script>
+(function(){
+const BDM=["Oleg Mazkovoi","Rizwan Bawani","Kirsten Frazer","Sam Twigg","Mitri Bosheh"];
+const SHORT=["Oleg","Rizwan","Kirsten","Sam","Mitri"];
+const tt=document.getElementById('tt');
+function hover(el,text){el.addEventListener('mousemove',e=>{tt.textContent=text;tt.style.opacity=1;tt.style.left=(e.clientX+12)+'px';tt.style.top=(e.clientY-30)+'px';});el.addEventListener('mouseleave',()=>tt.style.opacity=0);}
+const NS='http://www.w3.org/2000/svg';
+function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+
+// Column chart. series: [{name,color,values[]}], fmt for labels
+function columns(id,series,max,fmt,h){
+  const W=600,H=h||230,padL=36,padR=10,padT=14,padB=28;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,class:'chart',role:'img'});
+  const plotW=W-padL-padR,plotH=H-padT-padB;
+  const steps=5;
+  for(let i=0;i<=steps;i++){const y=padT+plotH-plotH*i/steps;svg.appendChild(el('line',{x1:padL,x2:W-padR,y1:y,y2:y,class:i?'grid':'axis'}));const t=el('text',{x:padL-6,y:y+4,'text-anchor':'end'});t.textContent=fmt(max*i/steps);svg.appendChild(t);}
+  const n=BDM.length,slot=plotW/n,bw=Math.min(34,(slot*0.6)/series.length);
+  BDM.forEach((b,i)=>{
+    const cx=padL+slot*i+slot/2;
+    series.forEach((s,j)=>{
+      const v=s.values[i],bh=plotH*v/max;
+      const x=cx-(series.length*bw+(series.length-1)*2)/2+j*(bw+2);
+      const y=padT+plotH-bh;
+      const r=el('rect',{x,y,width:bw,height:bh,fill:s.color,class:'bar',rx:2});
+      svg.appendChild(r);hover(r,`${b}: ${fmt(v)}${series.length>1?' ('+s.name+')':''}`);
+      const t=el('text',{x:x+bw/2,y:y-4,'text-anchor':'middle',class:'val'});t.textContent=fmt(v);svg.appendChild(t);
+    });
+    const l=el('text',{x:cx,y:H-8,'text-anchor':'middle'});l.textContent=SHORT[i];svg.appendChild(l);
+  });
+  document.getElementById(id).appendChild(svg);
+}
+columns('c-activepct',[{name:'',color:'var(--bar1)',values:[38.7,37.0,31.7,28.6,30.0]}],50,v=>v%1?v.toFixed(1)+'%':v+'%',220);
+columns('c-week',[{name:'',color:'var(--bar1)',values:[6,4,3,2,5]}],10,v=>Math.round(v));
+columns('c-month',[{name:'This month',color:'var(--bar1)',values:[20,22,12,14,12]},{name:'Last month',color:'var(--bar2)',values:[15,18,14,9,13]}],25,v=>Math.round(v));
+
+// Opportunity pool table
+const pool=[[60,1740000],[60,1520000],[38,1310000],[34,1180000],[40,1420000]];
+const $=v=>'$'+v.toLocaleString('en-AU');
+let ta=0,tp=0;
+document.getElementById('t-pool').innerHTML=pool.map((r,i)=>{const p=r[0]*r[1];ta+=r[0];tp+=p;return `<tr><td>${BDM[i]}</td><td class="num">${r[0]}</td><td class="num" style="color:var(--link);font-weight:600">${$(r[1])}</td><td class="num" style="color:var(--link);font-weight:600">${$(p)}</td></tr>`;}).join('')
+ +`<tr class="total"><td>Report Total</td><td class="num">${ta}</td><td class="num">${$(Math.round(tp/ta))}</td><td class="num">${$(tp)}</td></tr>`;
+
+// Gauge. bands in order low->high; good=true means high is good (reverse colours)
+function gauge(id,value,max,label,highIsGood){
+  const W=320,H=170,cx=160,cy=140,R=100,w=26;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`});
+  const cols=highIsGood?['var(--g4)','var(--g3)','var(--g2)','var(--g1)']:['var(--g1)','var(--g2)','var(--g3)','var(--g4)'];
+  const bands=[0,.25,.5,.75,1];
+  const P=f=>{const a=Math.PI*(1-f);return [cx+R*Math.cos(a),cy-R*Math.sin(a)];};
+  for(let i=0;i<4;i++){const [x1,y1]=P(bands[i]),[x2,y2]=P(bands[i+1]);svg.appendChild(el('path',{d:`M${x1} ${y1} A${R} ${R} 0 0 1 ${x2} ${y2}`,fill:'none',stroke:cols[i],'stroke-width':w}));}
+  for(let i=0;i<=4;i++){const f=i/4,a=Math.PI*(1-f),rr=R+w/2+12;const t=el('text',{x:cx+rr*Math.cos(a),y:cy-rr*Math.sin(a)+4,'text-anchor':f<.5?'end':f>.5?'start':'middle'});t.textContent=Math.round(max*f);svg.appendChild(t);}
+  const f=Math.min(value/max,1),a=Math.PI*(1-f);
+  const [nx,ny]=[cx+(R-w/2-2)*Math.cos(a),cy-(R-w/2-2)*Math.sin(a)];const [mx,my]=[cx+(R+w/2+2)*Math.cos(a),cy-(R+w/2+2)*Math.sin(a)];
+  svg.appendChild(el('line',{x1:nx,y1:ny,x2:mx,y2:my,stroke:'#33475b','stroke-width':4,'stroke-linecap':'round'}));
+  const g=document.getElementById(id);g.appendChild(svg);
+  const b=document.createElement('div');b.className='big';b.textContent=value;g.appendChild(b);
+  const l=document.createElement('div');l.className='lbl';l.textContent=label;g.appendChild(l);
+}
+gauge('g-nomeet',112,160,'(Count) contacts',false);
+gauge('g-booked',23,40,'(Count) contacts',true);
+gauge('g-noapp',41,80,'(Count) contacts',false);
+gauge('g-noscen',34,80,'(Count) contacts',false);
+gauge('g-nomeet-act',57,80,'(Count) contacts',false);
+
+// Tables beside dials
+const seg=s=>`<span class="seg ${s.includes('Hot')?'hot':'warm'}">${s}</span>`;
+const heat=d=>{const n=d==='Never'?999:d;return `<td class="heat ${n>180?'hi':n>120?'mid':'lo'}">${d}</td>`;};
+function rows(id,data,build){document.getElementById(id).innerHTML=data.map(build).join('');}
+rows('t-nomeet',[
+ ['Oliver Grant','Oleg Mazkovoi','Inactive - Hot','AFG','Never'],
+ ['Sophie Park','Rizwan Bawani','Inactive - Hot','Connective',214],
+ ['James Wilson','Kirsten Frazer','Inactive - Warm','LMG',162],
+ ['Emily Brooks','Sam Twigg','Inactive - Hot','Finsure',131],
+ ['Lucas Green','Mitri Bosheh','Inactive - Warm','AFG',97]
+],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${seg(r[2])}</td><td>${r[3]}</td>${heat(r[4])}</tr>`);
+rows('t-booked',[
+ ['Alicia Chen','Oleg Mazkovoi','Inactive - Hot','Connective','1 Oct 2026'],
+ ['Ben Carter','Rizwan Bawani','Inactive - Warm','AFG','3 Oct 2026'],
+ ['Ella Singh','Kirsten Frazer','Inactive - Hot','LMG','8 Oct 2026'],
+ ['Noah Reed','Sam Twigg','Inactive - Hot','Finsure','14 Oct 2026'],
+ ['Mia Taylor','Mitri Bosheh','Inactive - Warm','Connective','22 Oct 2026']
+],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${seg(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`);
+rows('t-noapp',[
+ ['Zoe Evans','Oleg Mazkovoi','Active - Hot',5,174],
+ ['Jack Brown','Rizwan Bawani','Active - Warm',3,158],
+ ['Lily Davis','Kirsten Frazer','Active - Hot',4,133],
+ ['Max Allen','Sam Twigg','Active - Warm',2,119],
+ ['Lucy Clark','Mitri Bosheh','Active - Warm',2,96]
+],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${seg(r[2])}</td><td class="num">${r[3]}</td>${heat(r[4])}</tr>`);
+rows('t-noscen',[
+ ['Harper Lee','Oleg Mazkovoi','Active - Hot',7,181],
+ ['Ethan Hall','Rizwan Bawani','Active - Warm',4,147],
+ ['Grace Kim','Kirsten Frazer','Active - Warm',4,128],
+ ['Leo Turner','Sam Twigg','Active - Hot',6,104],
+ ['Ava Scott','Mitri Bosheh','Active - Warm',5,93]
+],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${seg(r[2])}</td><td class="num">${r[3]}</td>${heat(r[4])}</tr>`);
+rows('t-nomeet-act',[
+ ['Chloe Wright','Oleg Mazkovoi','Active - Hot','Coffee catch-up','Never'],
+ ['Ryan Hughes','Rizwan Bawani','Active - Warm','Office visit',203],
+ ['Isla Moore','Kirsten Frazer','Active - Hot','Video call',149],
+ ['Finn Walker','Sam Twigg','Active - Warm','Office visit',117],
+ ['Ruby Adams','Mitri Bosheh','Active - Hot','Aggregator PD day',94]
+],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${seg(r[2])}</td><td>${r[3]}</td>${heat(r[4])}</tr>`);
+})();
+</script>
+
+</body></html>
