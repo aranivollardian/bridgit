@@ -150,6 +150,19 @@ td.heat.hi{background:var(--heat-hi)}td.heat.mid{background:var(--heat-mid)}td.h
         </table></div>
       </div>
     </div>
+
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Newly Added Inactive Hot Brokers - Last 30 Days<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="dial">
+        <div class="gauge" id="g-newinhot"></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Broker<span class="sort">&#8645;</span></th><th>BDM<span class="sort">&#8645;</span></th><th>Previous segment<span class="sort">&#8645;</span></th><th>Trigger<span class="sort">&#8645;</span></th><th>Aggregator<span class="sort">&#8645;</span></th><th>Date moved<span class="sort">&#8595;</span></th></tr></thead>
+          <tbody id="t-newinhot"></tbody>
+        </table></div>
+      </div>
+      <div class="foot">Segment changed to Inactive - Hot in the last 30 days (Top Broker tag applied, or scenario count crossed the Hot threshold).</div>
+    </div>
   </div>
 
   <div class="banner"><h2>Actives</h2></div>
@@ -189,6 +202,19 @@ td.heat.hi{background:var(--heat-hi)}td.heat.mid{background:var(--heat-mid)}td.h
           <tbody id="t-nomeet-act"></tbody>
         </table></div>
       </div>
+    </div>
+
+    <div class="card w12">
+      <div class="card-h"><span class="grip">&#8942;&#8942;</span><h3>[V] - Newly Moved Active Hot Brokers - Last 30 Days<span class="info">i</span></h3><span class="icons">&#8635; &#8801; &#8942;</span></div>
+      <div class="pills"><span class="pill">Dashboard filters applied</span><span class="pill">Filters (4)</span></div>
+      <div class="dial">
+        <div class="gauge" id="g-newacthot"></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Broker<span class="sort">&#8645;</span></th><th>BDM<span class="sort">&#8645;</span></th><th>Previous segment<span class="sort">&#8645;</span></th><th class="num">Apps last 12 mths<span class="sort">&#8645;</span></th><th class="num">Scenarios last 12 mths<span class="sort">&#8645;</span></th><th>Date moved<span class="sort">&#8595;</span></th></tr></thead>
+          <tbody id="t-newacthot"></tbody>
+        </table></div>
+      </div>
+      <div class="foot">Segment changed to Active - Hot in the last 30 days (4+ applications or 6+ scenarios in the last 12 months).</div>
     </div>
   </div>
 </div>
@@ -257,6 +283,8 @@ gauge('g-booked',23,40,'(Count) contacts',true);
 gauge('g-noapp',41,80,'(Count) contacts',false);
 gauge('g-noscen',34,80,'(Count) contacts',false);
 gauge('g-nomeet-act',57,80,'(Count) contacts',false);
+gauge('g-newinhot',18,40,'(Count) contacts',true);
+gauge('g-newacthot',11,20,'(Count) contacts',true);
 
 // Tables beside dials
 const seg=s=>`<span class="seg ${s.includes('Hot')?'hot':'warm'}">${s}</span>`;
@@ -297,6 +325,21 @@ rows('t-nomeet-act',[
  ['Finn Walker','Sam Twigg','Active - Warm','Office visit',117],
  ['Ruby Adams','Mitri Bosheh','Active - Hot','Aggregator PD day',94]
 ],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${seg(r[2])}</td><td>${r[3]}</td>${heat(r[4])}</tr>`);
+const segAny=s=>s.includes('Hot')?seg(s):s.includes('Warm')?seg(s):`<span class="seg">${s}</span>`;
+rows('t-newinhot',[
+ ['Daniel Foster','Oleg Mazkovoi','Inactive - Warm','Top Broker tag (Connective)','Connective','26 Sep 2026'],
+ ['Priya Nair','Rizwan Bawani','Inactive - Cool','Top Broker tag (AFG)','AFG','22 Sep 2026'],
+ ['Tom Bennett','Kirsten Frazer','Inactive - Warm','4th scenario in 12 mths','LMG','17 Sep 2026'],
+ ['Sarah Lim','Sam Twigg','Not tiered - new accreditation','Top Broker tag (Finsure)','Finsure','10 Sep 2026'],
+ ['Marcus Reid','Mitri Bosheh','Inactive - Warm','4th scenario in 12 mths','Connective','3 Sep 2026']
+],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${segAny(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`);
+rows('t-newacthot',[
+ ['Hannah Cole','Oleg Mazkovoi','Active - Warm',4,3,'25 Sep 2026'],
+ ['Liam Patel','Rizwan Bawani','Inactive - Hot',1,6,'19 Sep 2026'],
+ ['Olivia Marsh','Kirsten Frazer','Active - Warm',4,2,'15 Sep 2026'],
+ ['Jacob Nguyen','Sam Twigg','Active - Cool',2,6,'9 Sep 2026'],
+ ['Amelia Ross','Mitri Bosheh','Active - Warm',5,1,'2 Sep 2026']
+],r=>`<tr><td class="link">${r[0]}</td><td>${r[1]}</td><td>${segAny(r[2])}</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td><td>${r[5]}</td></tr>`);
 })();
 </script>
 
